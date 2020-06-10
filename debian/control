@@ -1,0 +1,18 @@
+Source: tokenize-rt
+Section: python
+Priority: optional
+Maintainer: KERN packaging <packaging@kernsuite.info>
+Build-Depends: debhelper (>=9),
+               dh-python,
+               python-all,
+               python-typing,
+               python-setuptools,
+Standards-Version: 4.4.1
+Homepage: https://github.com/asottile/tokenize-rt
+X-Python-Version: >= 2.7
+
+Package: tokenize-rt
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}, python-typing
+Description: A wrapper around the stdlib `tokenize` which roundtrips.

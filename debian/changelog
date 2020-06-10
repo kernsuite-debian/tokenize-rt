@@ -1,0 +1,5 @@
+tokenize-rt (3.2.0-1kern1) bionic; urgency=low
+
+  * Initial release 3.2.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Wed, 10 Jun 2020 14:28:28 +0200
