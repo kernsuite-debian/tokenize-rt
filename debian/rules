@@ -4,4 +4,4 @@ export DH_VERBOSE=1
 export PYBUILD_NAME=tokenize-rt
 
 %:
-	dh $@ --with python2 --buildsystem=pybuild --parallel
+	dh $@ --with python2,python3 --buildsystem=pybuild --parallel
