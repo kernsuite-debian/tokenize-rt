@@ -29,5 +29,5 @@ Description: A wrapper around the stdlib `tokenize` which roundtrips.
 Package: tokenize-rt
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}, python-typing
+Depends: ${misc:Depends}, ${shlibs:Depends}, ${python:Depends}, python-typing, python-tokenize-rt
 Description: A wrapper around the stdlib `tokenize` which roundtrips.
