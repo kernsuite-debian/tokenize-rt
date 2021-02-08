@@ -1,5 +1,6 @@
 [![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/asottile.tokenize-rt?branchName=master)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=master)
 [![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/25/master.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=master)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/tokenize-rt/master.svg)](https://results.pre-commit.ci/latest/github/asottile/tokenize-rt/master)
 
 tokenize-rt
 ===========
@@ -107,6 +108,7 @@ find the indices of the string parts of a (joined) string literal
 ## Sample usage
 
 - https://github.com/asottile/add-trailing-comma
+- https://github.com/asottile/future-annotations
 - https://github.com/asottile/future-fstrings
 - https://github.com/asottile/pyupgrade
 - https://github.com/asottile/yesqa
