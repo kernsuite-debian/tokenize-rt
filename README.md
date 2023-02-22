@@ -1,6 +1,6 @@
-[![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/asottile.tokenize-rt?branchName=master)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=master)
-[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/25/master.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=master)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/tokenize-rt/master.svg)](https://results.pre-commit.ci/latest/github/asottile/tokenize-rt/master)
+[![Build Status](https://dev.azure.com/asottile/asottile/_apis/build/status/asottile.tokenize-rt?branchName=main)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=main)
+[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/asottile/asottile/25/main.svg)](https://dev.azure.com/asottile/asottile/_build/latest?definitionId=25&branchName=main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/asottile/tokenize-rt/main.svg)](https://results.pre-commit.ci/latest/github/asottile/tokenize-rt/main)
 
 tokenize-rt
 ===========
@@ -15,7 +15,9 @@ python tokenization.
 
 ## Installation
 
-`pip install tokenize-rt`
+```bash
+pip install tokenize-rt
+```
 
 ## Usage
 
@@ -33,10 +35,9 @@ Construct a token
 - `name`: one of the token names listed in `token.tok_name` or
   `ESCAPED_NL` or `UNIMPORTANT_WS`
 - `src`: token's source as text
-- `line`: the line number that this token appears on.  This will be `None` for
-   `ESCAPED_NL` and `UNIMPORTANT_WS` tokens.
+- `line`: the line number that this token appears on.
 - `utf8_byte_offset`: the utf8 byte offset that this token appears on in the
-  line.  This will be `None` for `ESCAPED_NL` and `UNIMPORTANT_WS` tokens.
+  line.
 
 #### `tokenize_rt.Token.offset`
 
