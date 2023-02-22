@@ -1,3 +1,10 @@
+tokenize-rt (5.0.0-1kern1) focal; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 5.0.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Wed, 22 Feb 2023 12:45:16 +0000
+
 tokenize-rt (4.1.0-1kern1) focal; urgency=medium
 
   [ Athanaseus Javas Ramaia ]
