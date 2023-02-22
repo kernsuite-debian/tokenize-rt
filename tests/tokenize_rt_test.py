@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 
 import pytest
@@ -39,9 +41,9 @@ def test_src_to_tokens_simple():
     ret = src_to_tokens(src)
     assert ret == [
         Token('NAME', 'x', line=1, utf8_byte_offset=0),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=1),
         Token('OP', '=', line=1, utf8_byte_offset=2),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=3),
         Token('NUMBER', '5', line=1, utf8_byte_offset=4),
         Token('NEWLINE', '\n', line=1, utf8_byte_offset=5),
         Token('ENDMARKER', '', line=2, utf8_byte_offset=0),
@@ -56,11 +58,11 @@ def test_src_to_tokens_escaped_nl():
     ret = src_to_tokens(src)
     assert ret == [
         Token('NAME', 'x', line=1, utf8_byte_offset=0),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=1),
         Token('OP', '=', line=1, utf8_byte_offset=2),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
-        Token(ESCAPED_NL, '\\\n', line=None, utf8_byte_offset=None),
-        Token(UNIMPORTANT_WS, '    ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=3),
+        Token(ESCAPED_NL, '\\\n', line=1, utf8_byte_offset=4),
+        Token(UNIMPORTANT_WS, '    ', line=2, utf8_byte_offset=0),
         Token('NUMBER', '5', line=2, utf8_byte_offset=4),
         Token('NEWLINE', '\n', line=2, utf8_byte_offset=5),
         Token('ENDMARKER', '', line=3, utf8_byte_offset=0),
@@ -75,10 +77,10 @@ def test_src_to_tokens_escaped_nl_no_left_ws():
     ret = src_to_tokens(src)
     assert ret == [
         Token('NAME', 'x', line=1, utf8_byte_offset=0),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=1),
         Token('OP', '=', line=1, utf8_byte_offset=2),
-        Token(ESCAPED_NL, '\\\n', line=None, utf8_byte_offset=None),
-        Token(UNIMPORTANT_WS, '    ', line=None, utf8_byte_offset=None),
+        Token(ESCAPED_NL, '\\\n', line=1, utf8_byte_offset=3),
+        Token(UNIMPORTANT_WS, '    ', line=2, utf8_byte_offset=0),
         Token('NUMBER', '5', line=2, utf8_byte_offset=4),
         Token('NEWLINE', '\n', line=2, utf8_byte_offset=5),
         Token('ENDMARKER', '', line=3, utf8_byte_offset=0),
@@ -93,45 +95,75 @@ def test_src_to_tokens_escaped_nl_windows():
     ret = src_to_tokens(src)
     assert ret == [
         Token('NAME', 'x', line=1, utf8_byte_offset=0),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=1),
         Token('OP', '=', line=1, utf8_byte_offset=2),
-        Token(UNIMPORTANT_WS, ' ', line=None, utf8_byte_offset=None),
-        Token(ESCAPED_NL, '\\\r\n', line=None, utf8_byte_offset=None),
-        Token(UNIMPORTANT_WS, '    ', line=None, utf8_byte_offset=None),
+        Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=3),
+        Token(ESCAPED_NL, '\\\r\n', line=1, utf8_byte_offset=4),
+        Token(UNIMPORTANT_WS, '    ', line=2, utf8_byte_offset=0),
         Token('NUMBER', '5', line=2, utf8_byte_offset=4),
         Token('NEWLINE', '\r\n', line=2, utf8_byte_offset=5),
         Token('ENDMARKER', '', line=3, utf8_byte_offset=0),
     ]
 
 
-@pytest.mark.parametrize('prefix', ('f', 'ur', 'rb', 'F', 'UR', 'RB'))
-def test_src_to_tokens_string_prefix_normalization(prefix):
-    src = f"{prefix}'foo'\n"
+def test_src_to_tokens_implicit_continue():
+    src = (
+        'x = (\n'
+        '    1,\n'
+        '    2,\n'
+        ')\n'
+    )
     ret = src_to_tokens(src)
     assert ret == [
-        Token('STRING', f"{prefix}'foo'", line=1, utf8_byte_offset=0),
-        Token('NEWLINE', '\n', line=1, utf8_byte_offset=5 + len(prefix)),
+        Token(name='NAME', src='x', line=1, utf8_byte_offset=0),
+        Token(name='UNIMPORTANT_WS', src=' ', line=1, utf8_byte_offset=1),
+        Token(name='OP', src='=', line=1, utf8_byte_offset=2),
+        Token(name='UNIMPORTANT_WS', src=' ', line=1, utf8_byte_offset=3),
+        Token(name='OP', src='(', line=1, utf8_byte_offset=4),
+        Token(name='NL', src='\n', line=1, utf8_byte_offset=5),
+        Token(name='UNIMPORTANT_WS', src='    ', line=2, utf8_byte_offset=0),
+        Token(name='NUMBER', src='1', line=2, utf8_byte_offset=4),
+        Token(name='OP', src=',', line=2, utf8_byte_offset=5),
+        Token(name='NL', src='\n', line=2, utf8_byte_offset=6),
+        Token(name='UNIMPORTANT_WS', src='    ', line=3, utf8_byte_offset=0),
+        Token(name='NUMBER', src='2', line=3, utf8_byte_offset=4),
+        Token(name='OP', src=',', line=3, utf8_byte_offset=5),
+        Token(name='NL', src='\n', line=3, utf8_byte_offset=6),
+        Token(name='OP', src=')', line=4, utf8_byte_offset=0),
+        Token(name='NEWLINE', src='\n', line=4, utf8_byte_offset=1),
+        Token(name='ENDMARKER', src='', line=5, utf8_byte_offset=0),
+    ]
+
+
+def test_src_to_tokens_no_eol_eof():
+    ret = src_to_tokens('1')
+    assert ret == [
+        Token('NUMBER', '1', line=1, utf8_byte_offset=0),
+        Token('NEWLINE', '', line=1, utf8_byte_offset=1),
         Token('ENDMARKER', '', line=2, utf8_byte_offset=0),
     ]
 
 
-def test_src_to_tokens_octal_literal_normalization():
-    ret = src_to_tokens('0755\n')
-    assert ret == [
-        Token('NUMBER', '0755', line=1, utf8_byte_offset=0),
-        Token('NEWLINE', '\n', line=1, utf8_byte_offset=4),
-        Token('ENDMARKER', '', line=2, utf8_byte_offset=0),
-    ]
-
-
-@pytest.mark.parametrize('postfix', ('l', 'L'))
-def test_src_to_tokens_long_literal_normalization(postfix):
-    src = f'123{postfix}\n'
+def test_src_to_tokens_multiline_string():
+    src = (
+        'x = """\n'
+        '  y\n'
+        '""".format(1)\n'
+    )
     ret = src_to_tokens(src)
     assert ret == [
-        Token('NUMBER', f'123{postfix}', line=1, utf8_byte_offset=0),
-        Token('NEWLINE', '\n', line=1, utf8_byte_offset=4),
-        Token('ENDMARKER', '', line=2, utf8_byte_offset=0),
+        Token(name='NAME', src='x', line=1, utf8_byte_offset=0),
+        Token(name='UNIMPORTANT_WS', src=' ', line=1, utf8_byte_offset=1),
+        Token(name='OP', src='=', line=1, utf8_byte_offset=2),
+        Token(name='UNIMPORTANT_WS', src=' ', line=1, utf8_byte_offset=3),
+        Token(name='STRING', src='"""\n  y\n"""', line=1, utf8_byte_offset=4),
+        Token(name='OP', src='.', line=3, utf8_byte_offset=3),
+        Token(name='NAME', src='format', line=3, utf8_byte_offset=4),
+        Token(name='OP', src='(', line=3, utf8_byte_offset=10),
+        Token(name='NUMBER', src='1', line=3, utf8_byte_offset=11),
+        Token(name='OP', src=')', line=3, utf8_byte_offset=12),
+        Token(name='NEWLINE', src='\n', line=3, utf8_byte_offset=13),
+        Token(name='ENDMARKER', src='', line=4, utf8_byte_offset=0),
     ]
 
 
@@ -159,9 +191,9 @@ def test_reversed_enumerate():
     assert rest == [
         (5, Token(name='NEWLINE', src='\n', line=1, utf8_byte_offset=5)),
         (4, Token('NUMBER', '5', line=1, utf8_byte_offset=4)),
-        (3, Token(UNIMPORTANT_WS, ' ')),
+        (3, Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=3)),
         (2, Token('OP', '=', line=1, utf8_byte_offset=2)),
-        (1, Token(UNIMPORTANT_WS, ' ')),
+        (1, Token(UNIMPORTANT_WS, ' ', line=1, utf8_byte_offset=1)),
         (0, Token('NAME', 'x', line=1, utf8_byte_offset=0)),
     ]
 
@@ -254,14 +286,16 @@ def test_rfind_string_parts_parenthesized(src, n, expected_i):
     assert rfind_string_parts(tokens, n) == (expected_i,)
 
 
-def test_main(capsys):
-    main(('testing/resources/simple.py',))
+def test_main(capsys, tmp_path):
+    f = tmp_path.joinpath('simple.py')
+    f.write_text('x = 5\n')
+    main((str(f),))
     out, _ = capsys.readouterr()
     assert out == (
         "1:0 NAME 'x'\n"
-        "?:? UNIMPORTANT_WS ' '\n"
+        "1:1 UNIMPORTANT_WS ' '\n"
         "1:2 OP '='\n"
-        "?:? UNIMPORTANT_WS ' '\n"
+        "1:3 UNIMPORTANT_WS ' '\n"
         "1:4 NUMBER '5'\n"
         "1:5 NEWLINE '\\n'\n"
         "2:0 ENDMARKER ''\n"
