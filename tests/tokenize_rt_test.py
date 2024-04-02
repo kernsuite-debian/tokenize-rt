@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import sys
 
 import pytest
 
@@ -34,6 +35,14 @@ def test_offset_default_values():
 def test_token_offset():
     token = Token('NAME', 'x', line=1, utf8_byte_offset=2)
     assert token.offset == Offset(line=1, utf8_byte_offset=2)
+
+
+def test_token_matches():
+    token = Token('NAME', 'x', line=1, utf8_byte_offset=2)
+    assert token.matches(name='NAME', src='x')
+    assert not token.matches(name='OP', src='x')
+    assert not token.matches(name='NAME', src='y')
+    assert not token.matches(name='OP', src=':')
 
 
 def test_src_to_tokens_simple():
@@ -211,10 +220,19 @@ def test_parse_string_literal(s, expected):
     assert parse_string_literal(s) == expected
 
 
-@pytest.mark.parametrize('src', ('""', "b''", "f''", "r'''.'''"))
+@pytest.mark.parametrize('src', ('""', "b''", "r'''.'''"))
 def test_rfind_string_parts_only_literal(src):
     tokens = src_to_tokens(src)
     assert rfind_string_parts(tokens, 0) == (0,)
+
+
+def test_rfind_string_parts_py312_plus():
+    # in 3.12 this was changed to have its own tokenization (not as a string)
+    tokens = src_to_tokens("f''")
+    if sys.version_info >= (3, 12):  # pragma: >=3.12 cover
+        assert rfind_string_parts(tokens, 0) == ()
+    else:  # pragma: <3.12 cover
+        assert rfind_string_parts(tokens, 0) == (0,)
 
 
 @pytest.mark.parametrize(
