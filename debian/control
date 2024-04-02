@@ -2,14 +2,14 @@ Source: tokenize-rt
 Section: python
 Priority: optional
 Maintainer: KERN packaging <packaging@kernsuite.info>
-Build-Depends: debhelper (>=11),
+Build-Depends: debhelper-compat (= 13),
                dh-python,
                python3-all,
                python3-typing-extensions,
                python3-setuptools
-Standards-Version: 4.6.1
+Standards-Version: 4.6.2.0
 Homepage: https://github.com/asottile/tokenize-rt
-X-Python3-Version: >= 3.8
+X-Python3-Version: >= 3.10
 
 Package: python3-tokenize-rt
 Architecture: any
