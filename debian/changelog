@@ -1,3 +1,11 @@
+tokenize-rt (5.2.0-1kern1) jammy; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 5.2.0
+  * Build for jammy
+
+ -- KERN packaging <packaging@kernsuite.info>  Tue, 02 Apr 2024 11:14:43 +0000
+
 tokenize-rt (5.0.0-1kern1) focal; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
