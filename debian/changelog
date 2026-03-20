@@ -1,3 +1,11 @@
+tokenize-rt (6.2.0-1kern1) noble; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 6.2.0
+  * Build for noble
+
+ -- KERN packaging <packaging@kernsuite.info>  Fri, 20 Mar 2026 15:41:01 +0100
+
 tokenize-rt (5.2.0-1kern1) jammy; urgency=medium
 
   [ Athanaseus Javas Ramaila ]

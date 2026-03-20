@@ -7,9 +7,9 @@ Build-Depends: debhelper-compat (= 13),
                python3-all,
                python3-typing-extensions,
                python3-setuptools
-Standards-Version: 4.6.2.0
+Standards-Version: 4.7.2.0
 Homepage: https://github.com/asottile/tokenize-rt
-X-Python3-Version: >= 3.10
+X-Python3-Version: >= 3.12
 
 Package: python3-tokenize-rt
 Architecture: any
